@@ -41,13 +41,11 @@ const crearHospital = async (req, res = response)=>{
 const actualizarHospital = async ( req, res = response) =>{
 
     // validar si es registro correcto
-
     const uid = req.params.id;
-
+    const uidUsuario = req.uid;
     try{
 
         const registroDB = await Hospital.findById( uid );
-
         if(!registroDB){
             res.status(404).json({
                 ok:false,
@@ -56,9 +54,11 @@ const actualizarHospital = async ( req, res = response) =>{
         }
 
         //Actualizar datos
-        const { ...campos} = req.body;
-
-        const actualizado =  await Hospital.findByIdAndUpdate(uid, campos, {new: true});
+        const cambios = {
+            ...req.body,
+            usuario: uidUsuario
+        }
+        const actualizado =  await Hospital.findByIdAndUpdate(uid, cambios, {new: true});
     
         res.json({
             ok:true,

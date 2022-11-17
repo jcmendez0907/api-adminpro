@@ -43,6 +43,7 @@ const actualizarMedico = async ( req, res = response) =>{
 
     // validar si es registro correcto
     const uid = req.params.id;
+    const uidUsuario = req.uid;
     try{
 
         const registroDB = await Medico.findById( uid );
@@ -54,8 +55,11 @@ const actualizarMedico = async ( req, res = response) =>{
         }
 
         //Actualizar datos
-        const { ...campos} = req.body;
-        const registro =  await Medico.findByIdAndUpdate(uid, campos, {new: true});
+        const cambios = {
+            ...req.body,
+            usuario: uidUsuario
+        }
+        const registro =  await Medico.findByIdAndUpdate(uid, cambios, {new: true});
     
         res.json({
             ok:true,
